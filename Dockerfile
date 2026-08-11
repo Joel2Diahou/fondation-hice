@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_mysql zip
 
-# == La correction magique pour l'erreur Apache ==
+# ===== CORRECTION DE L'ERREUR APACHE =====
 RUN a2dismod mpm_event && a2enmod mpm_prefork
 RUN a2enmod rewrite
 
