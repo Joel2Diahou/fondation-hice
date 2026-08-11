@@ -32,6 +32,12 @@ RUN chown -R www-data:www-data /var/www/html \
     && chmod -R 755 /var/www/html/storage \
     && chmod -R 755 /var/www/html/bootstrap/cache
 
+# Configurer le document root vers le dossier public
+RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
+
+# Activer le module rewrite et autoriser .htaccess
+RUN sed -i '/<Directory \/var\/www\/html>/c\<Directory \/var\/www\/html/public>\n\tOptions Indexes FollowSymLinks\n\tAllowOverride All\n\tRequire all granted\n</Directory>' /etc/apache2/apache2.conf
+
 # Exposer le port 80
 EXPOSE 80
 
