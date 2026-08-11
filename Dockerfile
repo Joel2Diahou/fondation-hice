@@ -10,6 +10,9 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_mysql zip
 
+# === FIX : Désactiver mpm_event et activer mpm_prefork ===
+RUN a2dismod mpm_event && a2enmod mpm_prefork
+
 RUN a2enmod rewrite
 
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -18,7 +21,7 @@ WORKDIR /var/www/html
 
 COPY . .
 
-# === SUPPRIMER ET RECRÉER routes/web.php ===
+# Supprimer et recréer routes/web.php (pour éviter les BOM)
 RUN rm -f /var/www/html/routes/web.php && \
     echo '<?php' > /var/www/html/routes/web.php && \
     echo '' >> /var/www/html/routes/web.php && \
@@ -110,6 +113,13 @@ RUN rm -f /var/www/html/routes/web.php && \
     echo '        Route::get("/monitoring", [MonitoringController::class, "index"])->name("monitoring.index");' >> /var/www/html/routes/web.php && \
     echo '    });' >> /var/www/html/routes/web.php && \
     echo '});' >> /var/www/html/routes/web.php
+
+# === CRÉER LE FICHIER .env AVEC APP_KEY ===
+RUN echo "APP_KEY=base64:R+DsZlbgJM0XEwJzEiwpaESa1EYTgxOSrgKWrvc/KDY=" > /var/www/html/.env && \
+    echo "APP_ENV=production" >> /var/www/html/.env && \
+    echo "APP_DEBUG=false" >> /var/www/html/.env && \
+    echo "APP_URL=https://fondation-hice.onrender.com" >> /var/www/html/.env && \
+    echo "DB_CONNECTION=sqlite" >> /var/www/html/.env
 
 RUN composer install --no-dev --optimize-autoloader
 
