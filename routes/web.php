@@ -9,8 +9,6 @@ use App\Http\Controllers\Site\AProposController;
 use App\Http\Controllers\Site\PartenaireController as SitePartenaireController;
 use App\Http\Controllers\DemandePartenaireController;
 use App\Http\Controllers\Site\DeposerProjetController;
-use App\Http\Controllers\Site\VideoController as SiteVideoController;
-
 
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\DashboardController;
@@ -22,17 +20,12 @@ use App\Http\Controllers\Admin\DemandeController;
 use App\Http\Controllers\Admin\ProjetController as AdminProjetController;
 use App\Http\Controllers\Admin\DemandePartenaireController as AdminDemandePartenaireController;
 use App\Http\Controllers\Admin\MonitoringController;
-use App\Http\Controllers\Admin\VideoController as AdminVideoController;
-
 
 use App\Http\Controllers\ProjetController;
 
 // ============================================================
 // ROUTES DU SITE PUBLIC
 // ============================================================
-Route::get('/test-mail', [App\Http\Controllers\TestMailController::class, 'test']);
-Route::get('/videos', [SiteVideoController::class, 'index'])->name('videos.index');
-
 Route::get('/', [AccueilController::class, 'index'])->name('accueil');
 Route::get('/programmes', [SiteProgrammeController::class, 'index'])->name('programmes.index');
 Route::get('/programmes/{id}', [SiteProgrammeController::class, 'show'])->name('programmes.show');
@@ -104,14 +97,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
             Route::delete('/{id}', [AdminProjetController::class, 'destroy'])->name('destroy');
             Route::post('/{id}/notifier', [AdminProjetController::class, 'notifier'])->name('notifier');
         });
-        Route::prefix('videos')->name('videos.')->group(function () {
-            Route::get('/', [AdminVideoController::class, 'index'])->name('index');
-            Route::get('/create', [AdminVideoController::class, 'create'])->name('create');
-            Route::post('/', [AdminVideoController::class, 'store'])->name('store');
-            Route::get('/{id}/edit', [AdminVideoController::class, 'edit'])->name('edit');
-            Route::put('/{id}', [AdminVideoController::class, 'update'])->name('update');
-            Route::delete('/{id}', [AdminVideoController::class, 'destroy'])->name('destroy');
-        });
+
         // ===== MONITORING =====
         Route::get('/monitoring', [MonitoringController::class, 'index'])->name('monitoring.index');
     });
