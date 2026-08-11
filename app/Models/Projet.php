@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Projet extends Model
+{
+    use HasFactory;
+
+    protected $fillable = [
+        'nom_complet',
+        'email',
+        'telephone',
+        'ville',
+        'etablissement',
+        'categorie',
+        'classe_niveau',
+        'nom_projet',
+        'description_projet',
+        'objectifs',
+        'besoins',
+        'statut'
+    ];
+}
