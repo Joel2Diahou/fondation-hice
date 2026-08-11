@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd pdo pdo_mysql zip
 
-# CORRECTION DU PROBLÈME MPM
+# == La correction magique pour l'erreur Apache ==
 RUN a2dismod mpm_event && a2enmod mpm_prefork
 RUN a2enmod rewrite
 
@@ -29,10 +29,6 @@ RUN chown -R www-data:www-data /var/www/html \
 RUN sed -i 's!/var/www/html!/var/www/html/public!g' /etc/apache2/sites-available/000-default.conf
 
 RUN sed -i '/<Directory \/var\/www\/html>/c\<Directory \/var\/www\/html/public>\n\tOptions Indexes FollowSymLinks\n\tAllowOverride All\n\tRequire all granted\n</Directory>' /etc/apache2/apache2.conf
-
-RUN echo "display_errors = On" >> /usr/local/etc/php/conf.d/custom.ini \
-    && echo "error_reporting = E_ALL" >> /usr/local/etc/php/conf.d/custom.ini \
-    && echo "log_errors = On" >> /usr/local/etc/php/conf.d/custom.ini
 
 EXPOSE 80
 
